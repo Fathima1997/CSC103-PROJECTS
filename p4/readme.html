@@ -215,7 +215,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3 id="automated-tests">Automated tests</h3>
 <p>The script <code>./rand-test.sh</code> takes a list of programs you want to test, invents some random files to test them on, and then checks (using every combination of flags) that they do the same thing as the system versions. For example to test them all:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">./rand-test.sh</span> wc tr sort shuf uniq</code></pre></div>
-<p>By default, it will delete the test files after a successful test. To keep them, do this:</p>
+<p>If a test fails, you can see exactly what command was run that caused it to fail, as well as the input, which should be instrumental for any debugging that you need to do. For example, let’s say my <code>sort</code> is a little broken. Then running the test might look like this:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">./rand-test.sh</span> sort
+<span class="kw">sort</span> : testing flags -r -u -f ...
+<span class="kw">XXX</span>: ./sort -u <span class="kw">&lt;</span> /tmp/p3test-Cnwwxi/generic
+<span class="kw">8</span> tests failed.  Input file(s) <span class="kw">saved</span> in /tmp/p3test-Cnwwxi/.</code></pre></div>
+<p>So the offending command was <code>./sort -u</code> and an example of an input that breaks it will be in the file <code>/tmp/p3test-Cnwwxi/generic</code>. Now we can investigate further by simply comparing our <code>./sort</code> with the real <code>sort</code> on that same input, say via the following:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">./sort</span> -u <span class="kw">&lt;</span> /tmp/p3test-Cnwwxi/generic <span class="kw">&gt;</span> /tmp/mine
+$ <span class="kw">sort</span> -u <span class="kw">&lt;</span> /tmp/p3test-Cnwwxi/generic <span class="kw">&gt;</span> /tmp/systems
+$ <span class="kw">vimdiff</span> /tmp/mine /tmp/systems</code></pre></div>
+<p>(See below for how a more fancy way to do this without writing temp files.) <em>Note:</em> By default, it will delete the test files after a successful test. To keep them, do this:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="ot">save=</span>1 <span class="kw">./rand-test.sh</span> wc tr sort shuf uniq</code></pre></div>
 <p>These tests passing does not mean your programs actually work, but it is at least a good sign that they aren’t totally broken! A few things to note, in particular:</p>
 <ul>
