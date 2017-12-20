@@ -33,59 +33,33 @@ static const char* usage =
 "   -d,--delete         Delete characters in SET1 rather than translate.\n"
 "   --help          show this message and exit.\n";
 
-void escape(string& s) {
-	/* NOTE: the normal tr command seems to handle invalid escape
-	 * sequences by simply removing the backslash (silently) and
-	 * continuing with the translation as if it never appeared. */
-	/* TODO: write me... */
-}
-
-int main(int argc, char *argv[])
+int main()
 {
-	// define long options
-	static int comp=0, del=0;
-	static struct option long_opts[] = {
-		{"complement",      no_argument,   0, 'c'},
-		{"delete",          no_argument,   0, 'd'},
-		{"help",            no_argument,   0, 'h'},
-		{0,0,0,0}
-	};
-	// process options:
-	char c;
-	int opt_index = 0;
-	while ((c = getopt_long(argc, argv, "cdh", long_opts, &opt_index)) != -1) {
-		switch (c) {
-			case 'c':
-				comp = 1;
-				break;
-			case 'd':
-				del = 1;
-				break;
-			case 'h':
-				printf(usage,argv[0]);
-				return 0;
-			case '?':
-				printf(usage,argv[0]);
-				return 1;
-		}
-	}
-	if (del) {
-		if (optind != argc-1) {
-			fprintf(stderr, "wrong number of arguments.\n");
-			return 1;
-		}
-	} else if (optind != argc-2) {
-		fprintf(stderr,
-				"Exactly two strings must be given when translating.\n");
-		return 1;
-	}
-	string s1 = argv[optind++];
-	string s2 = (optind < argc)?argv[optind]:"";
-	/* process any escape characters: */
-	escape(s1);
-	escape(s2);
+	{
+    int max = 0;
+    unsigned int repetitioncount = 1;
+    vector<string> vec;
+	int result = 0;
+	string text;
 
-	/* TODO: finish this... */
-
-	return 0;
+    cout << "Please Enter text " << endl;
+    while(cin>>text && text != "qi"){
+        vec.push_back(text);
+    }
+    for(unsigned int i = 1; i < vec.size(); i++){
+        if (vec[i] == vec[i-1]) {
+            repetitioncount++;
+        } else {
+            repetitioncount = 1;
+        }
+        if (repetitioncount > max) {
+            result = i;
+            max = repetitioncount;
+    
+    if (!vec.size())
+        return 0;
+        }
+    }
+    cout<<"Text = "<<vec[result]<<", Repetition = "<<max<<endl;
+    return 0;
 }
