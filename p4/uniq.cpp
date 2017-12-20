@@ -46,6 +46,21 @@ int main(int argc, char *argv[]) {
 				return 1;
 		}
 	}
+	string words, temp = "";
+	int count = 0;
+	while(cin >> words)
+	{
+		if(temp == "")
+			temp=words;
+		if(temp != words)
+		{
+			cout << count << " - " << temp << "\n";
+			temp = words;
+			count = 0;
+		}
+		count++
+	}
+	cout << count << " - " << temp << "\n";
 
 	/* TODO: write me... */
 
