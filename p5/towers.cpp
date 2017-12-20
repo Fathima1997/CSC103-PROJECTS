@@ -22,7 +22,8 @@ using std::endl;
 #include <cstdlib> // for atoi function
 
 /* Here's a skeleton main function for processing the arguments. */
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]){
+int moveTower(int n, int start, int middle, int end) ;
 	// define long options
 	static struct option long_opts[] = {
 		{"start",        required_argument, 0, 's'},
@@ -51,9 +52,22 @@ int main(int argc, char *argv[]) {
 				return 1;
 		}
 	}
+moveTower(n, start, 6-(start+end), end);
+	return 0;
+}
 
 	/* TODO: now that you have the options and arguments,
 	 * solve the puzzle. */
+	int moveTower(int n, int start, int middle, int end) {
+		if (n == 1) {
+			cout << start << ' ' << end << endl;
+		}
+			else {
+				moveTower(n-1, start, end, middle);
+				cout << start << ' ' << end << endl;
+				moveTower(n-1, middle, start, end);
+			}
+		}
 
-	return 0;
-}
+
+
