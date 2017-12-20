@@ -15,7 +15,33 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-int main()
+int main ()
 {
-	return 0;
+    int n, i;
+    while (cin >>n)
+     {
+    bool isPrime = true;
+
+     if (n == 1)
+     {
+      isPrime = false;
+     }
+     else
+     {
+    for (i = 2; i <= n / 2; ++i)
+      {
+
+        if(n % i == 0)
+        {
+            isPrime = false;
+            break;
+        }
+      }
+     }
+    if (isPrime)
+        cout << "1\n";
+    else
+        cout << "0\n";
+     }
+    return 0;
 }
