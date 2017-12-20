@@ -13,12 +13,17 @@
  * #hours: 
  */
 
+#include <iostream>
 #include <string>
+using std::cout;
+using std::cin;
+using std::endl;
 using std::string;
 #include <set>
 using std::set;
 #include <getopt.h> // to parse long arguments.
 #include <cstdio> // printf
+//using namespace std;
 
 static const char* usage =
 "Usage: %s [OPTIONS]...\n"
@@ -30,8 +35,25 @@ static const char* usage =
 "   -u,--uwords           print unique word count.\n"
 "   --help          show this message and exit.\n";
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
+	string s;
+	getline(cin, s);
+	int countspace = 0;
+	int countline = 1;
+	int countwords = 0;
+
+		for(int i = 0; s[i] != '\n'; i++){
+   			 if(s[i] == ' ')
+				countwords++;
+				countspace++;
+			{
+			if(s[i] == '\n')
+				countline++;
+  			}
+		}
+  cout << countline << "  "  << countwords+1 << " "  << s.size() << "  " << endl;
+
+	{
 	// define long options
 	static int charonly=0, linesonly=0, wordsonly=0, uwordsonly=0, longonly=0;
 	static struct option long_opts[] = {
@@ -43,6 +65,7 @@ int main(int argc, char *argv[])
 		{"help",            no_argument,   0, 'h'},
 		{0,0,0,0}
 	};
+
 	// process options:
 	char c;
 	int opt_index = 0;
@@ -75,4 +98,5 @@ int main(int argc, char *argv[])
 	/* TODO: write me... */
 
 	return 0;
+}
 }
