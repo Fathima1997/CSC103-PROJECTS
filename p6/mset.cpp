@@ -69,9 +69,36 @@ void mandelbrotArea::refreshImage()
 void mandelbrotArea::mouseDoubleClickEvent(QMouseEvent *event)
 {
 	// TODO: write the code for the zoom operation.  You can get
-	// the mouse button from event->button() and check for 
+	// the mouse button from event->button() and check for
 	// event->button() == Qt::LeftButton, etc. to figure out what
 	// button is being pressed.
+
+	double x = event -> x();
+	double y = event -> x();
+	double w = image.width();
+	double h = image.width();
+	double unit = windowWidth/ w;
+	double unitY = windowWidth / h;
+
+	if(event -> button() == Qt::LeftButton) {
+		w /= 4;
+		h /= 4;
+		this -> maxIterations +=100;
+
+		windowWidth /= 2;
+	}
+	else if(event -> button() == Qt::RightButton) {
+		this -> maxIterations -= 100;
+		windowWidth *= 2;
+	}
+	else {
+		w /= 2;
+		h /= 2;
+	}
+	llCoord.real += (y-w)*unit;
+	llCoord.imag -= (y-h)*unitY;
+	render();
+
 }
 
 void mandelbrotArea::mousePressEvent(QMouseEvent *event)
@@ -133,10 +160,32 @@ void mandelbrotArea::render()
 	unsigned long iheight = image.height();
 	double unit = 1.0 / iwidth; // on a scale of 0-1, how wide is a pixel?
 	for (unsigned long i = 0; i < iwidth; i++) {
+		for (unsigned long j = 0; j < iheight; j++) {
+		/*
 		qc.setRgbF(i*unit,sqrt(i*unit),i*unit); // set the color we want to draw.
 		qpen.setColor(qc); // apply the color to the pen
 		qp.setPen(qpen);   // set the painter to use that pen
 		qp.drawLine(i,0,i,iheight); // draw a line of the specified color.
+
+		double x = ((double)i- (double)centerX)*unit*3;
+		double y = ((double)j- (double)centerY)*unitY*3;
+*/
+			double x = llCoord.real+((double)i*unit);
+			double y = llCoord.imag-((double)j*unit);
+		complex c = complex(x,y);
+		complex z;
+		unsigned long iter;
+		for(iter = 0; iter < maxIterations && z.real*z.real + z.imag*z.imag < 4.0;
+		iter++) {
+			z = z*z +c;
+		}
+		long double perc = (double)iter/(double)maxIterations;
+		perc = (perc == 1) ? 0 : perc;
+		qc.setRgbF(perc, sqrt(perc), perc);
+		qpen.setColor(qc);
+		qp.setPen(qpen);
+		qp.drawPoint(i,j);
+		}
 	}
 	update(); // repaint screen contents
 	return;
